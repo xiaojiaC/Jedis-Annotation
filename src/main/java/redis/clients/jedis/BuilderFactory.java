@@ -11,6 +11,10 @@ import java.util.Set;
 
 import redis.clients.util.SafeEncoder;
 
+/**
+ * 数据构建器工厂
+ * 构建器作用：将服务器返回的数据构建成指定类型数据
+ */
 public class BuilderFactory {
   public static final Builder<Double> DOUBLE = new Builder<Double>() {
     public Double build(Object data) {

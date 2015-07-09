@@ -2,16 +2,39 @@ package redis.clients.jedis;
 
 import redis.clients.jedis.exceptions.JedisDataException;
 
+/**
+ * <pre>
+ * Transaction t = jedis.multi();
+ * t.set("fool", "bar"); 
+ * Response<String> result1 = t.get("fool");
+
+ * t.zadd("foo", 1, "barowitch"); 
+ * t.zadd("foo", 0, "barinsky"); 
+ * Response<Set<String>> sose = t.zrange("foo", 0, -1);   // get the entire sortedset
+ * t.exec();                                              // don't forget it
+
+ * String foolbar = result1.get();                        // use Response.get() to retrieve things from a Response
+ * int soseSize = sose.get().size();                      // on sose.get() you can directly call Set methods!
+
+ * // List<Object> allResults = t.exec();              // you could still get all results at once, as before
+ * </pre>
+ */
 public class Response<T> {
   protected T response = null;
   protected JedisDataException exception = null;
 
+  // 是否正在building
   private boolean building = false;
+  // 已被build
   private boolean built = false;
+  // response是否被设置数据
   private boolean set = false;
 
+  // 数据构建器
   private Builder<T> builder;
+  // 设置响应数据
   private Object data;
+  // 依赖的响应
   private Response<?> dependency = null;
 
   public Response(Builder<T> b) {

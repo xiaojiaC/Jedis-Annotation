@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import redis.clients.util.SafeEncoder;
 
+// 哈希表的元组
 public class Tuple implements Comparable<Tuple> {
   private byte[] element;
   private Double score;

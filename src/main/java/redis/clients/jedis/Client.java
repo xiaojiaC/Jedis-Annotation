@@ -11,6 +11,15 @@ import java.util.Map.Entry;
 import redis.clients.jedis.JedisCluster.Reset;
 import redis.clients.util.SafeEncoder;
 
+/**
+ * <pre>
+ * redis客户端继承了二进制安全的客户端，该类可用于构建客户端，在该客户端中可以发送字符串类型的命令，它会使用二进制安全客户端中相对安
+ * 全的方法发送二进制命令，BinaryClient继承了连接（连接实现了Closeable接口，便于释放服务器资源），而连接中包含了套接字和redis实
+ * 现的输入输出流，因此有可以用输出流向目标主机redis服务器中输出二进制请求，服务器处理后可利用输入流进行读取，在发送命令时，又利用了
+ * redis网络传输协议，该协议类中还包含了对服务器回复消息的解析，命令关键字枚举等，对于安全性而言，则使用SafeEncoder类对数据进行编
+ * 码和解码。
+ * </pre>
+ */
 public class Client extends BinaryClient implements Commands {
 
   public Client() {

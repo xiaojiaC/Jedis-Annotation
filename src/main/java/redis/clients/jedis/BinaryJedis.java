@@ -21,6 +21,10 @@ import redis.clients.util.JedisByteHashMap;
 import redis.clients.util.JedisURIHelper;
 import redis.clients.util.SafeEncoder;
 
+/**
+ * 该类可构建一个二进制安全的客户端，构建分为两类：利用主机端口信息，利用ＵＲＩ信息。
+ * 该类提供了对redis事务和流水线命令的支持。
+ */
 public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKeyBinaryCommands,
     AdvancedBinaryJedisCommands, BinaryScriptingCommands, Closeable {
   protected Client client = null;
@@ -31,6 +35,9 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
     client = new Client();
   }
 
+  /*
+   * redis://:foouser@localhost:6380/2
+   */
   public BinaryJedis(final String host) {
     URI uri = URI.create(host);
     if (uri.getScheme() != null && uri.getScheme().equals("redis")) {
