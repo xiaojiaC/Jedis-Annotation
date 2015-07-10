@@ -14,6 +14,7 @@ import redis.clients.util.JedisURIHelper;
  * PoolableObjectFactory custom impl.
  */
 class JedisFactory implements PooledObjectFactory<Jedis> {
+  // 原子引用
   private final AtomicReference<HostAndPort> hostAndPort = new AtomicReference<HostAndPort>();
   private final int timeout;
   private final String password;
@@ -51,6 +52,7 @@ class JedisFactory implements PooledObjectFactory<Jedis> {
     this.hostAndPort.set(hostAndPort);
   }
 
+  // 获取被池对象包裹的底层对象(jedis)
   @Override
   public void activateObject(PooledObject<Jedis> pooledJedis) throws Exception {
     final BinaryJedis jedis = pooledJedis.getObject();
@@ -60,6 +62,7 @@ class JedisFactory implements PooledObjectFactory<Jedis> {
 
   }
 
+  // 销毁池对象，退出客户端并断开连接
   @Override
   public void destroyObject(PooledObject<Jedis> pooledJedis) throws Exception {
     final BinaryJedis jedis = pooledJedis.getObject();
@@ -77,6 +80,7 @@ class JedisFactory implements PooledObjectFactory<Jedis> {
 
   }
 
+  //用于生成一个新的池对象实例
   @Override
   public PooledObject<Jedis> makeObject() throws Exception {
     final HostAndPort hostAndPort = this.hostAndPort.get();
@@ -101,6 +105,7 @@ class JedisFactory implements PooledObjectFactory<Jedis> {
     // TODO maybe should select db 0? Not sure right now.
   }
 
+  // 验证池对象底层对象的状态
   @Override
   public boolean validateObject(PooledObject<Jedis> pooledJedis) {
     final BinaryJedis jedis = pooledJedis.getObject();

@@ -166,6 +166,7 @@ public class Pipeline extends MultiKeyPipelineBase {
 
     client.exec();
     Response<List<Object>> response = super.getResponse(currentMulti);
+    // TODO 此响应被弹出时，build过程中其中存储的各个响应build时，又会对此响应(依赖响应)进行build，循环依赖了?
     currentMulti.setResponseDependency(response);
     currentMulti = null;
     return response;

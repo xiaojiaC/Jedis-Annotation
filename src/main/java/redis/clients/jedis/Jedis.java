@@ -3297,6 +3297,9 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
     return BuilderFactory.PUBSUB_NUMSUB_MAP.build(client.getBinaryMultiBulkReply());
   }
 
+  /**
+   * 如果池中有jedis连接对象，废弃它，如果没有，则将它返还给对象池
+   */
   @Override
   public void close() {
     if (dataSource != null) {

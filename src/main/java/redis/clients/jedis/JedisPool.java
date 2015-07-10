@@ -9,6 +9,31 @@ import redis.clients.jedis.exceptions.JedisException;
 import redis.clients.util.JedisURIHelper;
 import redis.clients.util.Pool;
 
+/**
+ * JedisPool pool = new JedisPool(new JedisPoolConfig(), "localhost");
+ *-------------------------------------------------------------------------
+ * try (Jedis jedis = pool.getResource()) {
+ *      jedis.set("foo", "bar");
+ *      String foobar = jedis.get("foo");
+ *      jedis.zadd("sose", 0, "car"); jedis.zadd("sose", 0, "bike"); 
+ *      Set<String> sose = jedis.zrange("sose", 0, -1);
+ * }
+ * pool.destroy();
+ *-------------------------------------------------------------------------
+ * Jedis jedis = null;
+ * try {
+ *      jedis = pool.getResource();
+ *      jedis.set("foo", "bar");
+ *      String foobar = jedis.get("foo");
+ *      jedis.zadd("sose", 0, "car"); jedis.zadd("sose", 0, "bike"); 
+ *      Set<String> sose = jedis.zrange("sose", 0, -1);
+ * } finally {
+ *      if (jedis != null) {
+ *          jedis.close();
+ *      }
+ * }
+ * pool.destroy();
+ */
 public class JedisPool extends Pool<Jedis> {
 
   public JedisPool() {
@@ -83,7 +108,7 @@ public class JedisPool extends Pool<Jedis> {
 
   @Override
   public Jedis getResource() {
-    Jedis jedis = super.getResource();
+    Jedis jedis = super.getResource();//从池中借出一个jedis连接
     jedis.setDataSource(this);
     return jedis;
   }

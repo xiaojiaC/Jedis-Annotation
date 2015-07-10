@@ -10,6 +10,9 @@ import redis.clients.jedis.exceptions.JedisConnectionException;
 import redis.clients.jedis.exceptions.JedisException;
 
 public abstract class Pool<T> implements Closeable {
+  /* Apache Commons Pool2 源码分析:
+   *    http://aofengblog.blog.163.com/blog/static/6317021201463075826473/
+   */
   protected GenericObjectPool<T> internalPool;
 
   /**
@@ -43,6 +46,7 @@ public abstract class Pool<T> implements Closeable {
     this.internalPool = new GenericObjectPool<T>(factory, poolConfig);
   }
 
+  // 从池中借出一个对象
   public T getResource() {
     try {
       return internalPool.borrowObject();
@@ -51,6 +55,7 @@ public abstract class Pool<T> implements Closeable {
     }
   }
 
+  // 将一个对象返还给池
   public void returnResourceObject(final T resource) {
     if (resource == null) {
       return;
@@ -62,6 +67,7 @@ public abstract class Pool<T> implements Closeable {
     }
   }
 
+  // 废弃一个对象
   public void returnBrokenResource(final T resource) {
     if (resource != null) {
       returnBrokenResourceObject(resource);
@@ -86,6 +92,7 @@ public abstract class Pool<T> implements Closeable {
     }
   }
 
+  // 关闭连接池
   protected void closeInternalPool() {
     try {
       internalPool.close();
@@ -94,6 +101,7 @@ public abstract class Pool<T> implements Closeable {
     }
   }
 
+  // 返回从池中借出的对象数量
   public int getNumActive() {
     if (this.internalPool == null || this.internalPool.isClosed()) {
       return -1;
@@ -102,6 +110,7 @@ public abstract class Pool<T> implements Closeable {
     return this.internalPool.getNumActive();
   }
 
+  // 返回池中空闲的对象数量
   public int getNumIdle() {
     if (this.internalPool == null || this.internalPool.isClosed()) {
       return -1;
@@ -110,6 +119,7 @@ public abstract class Pool<T> implements Closeable {
     return this.internalPool.getNumIdle();
   }
 
+  // 返回当前阻塞的线程数的估计数，等待一个对象从池中返回。
   public int getNumWaiters() {
     if (this.internalPool == null || this.internalPool.isClosed()) {
       return -1;
