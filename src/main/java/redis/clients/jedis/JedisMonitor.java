@@ -1,5 +1,8 @@
 package redis.clients.jedis;
 
+/**
+ * 实时打印出 Redis 服务器接收到的命令，调试用。
+ */
 public abstract class JedisMonitor {
   protected Client client;
 
